@@ -1,20 +1,16 @@
 package repo;
 
 import entity.ParkingLot;
+import entity.ParkingSpaceInfo;
+import entity.ParkingTicket;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.Types;
 
 public class Repo {
-    public void init(List<ParkingLot> parkingLots) {
-        emptyDb();
-        for (ParkingLot parkingLot : parkingLots) {
-            initDbData(parkingLot);
-        }
-    }
-
-    private void emptyDb() {
+    public void emptyDb() {
         Connection connection = DatabaseUtil.connectToDB();
         PreparedStatement preparedStatement = null;
         try {
@@ -28,7 +24,7 @@ public class Repo {
         }
     }
 
-    private void initDbData(ParkingLot parkingLot) {
+    public void initDbData(ParkingLot parkingLot) {
         Connection connection = DatabaseUtil.connectToDB();
         PreparedStatement preparedStatement = null;
         char parkingLotId = parkingLot.getId();
@@ -50,6 +46,50 @@ public class Repo {
         } finally {
             DatabaseUtil.releaseSource(connection, preparedStatement);
         }
+    }
 
+    public ParkingSpaceInfo findAvailableParkingSpace() {
+        Connection connection = DatabaseUtil.connectToDB();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            String setStartIdCmd = "SELECT id,parking_lot_id,space_no FROM parking_space_info WHERE isnull(license_plate_no) " +
+                    "ORDER BY parking_lot_id,space_no LIMIT 1";
+            preparedStatement = connection.prepareStatement(setStartIdCmd);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return new ParkingSpaceInfo(
+                        resultSet.getInt("id"),
+                        resultSet.getString("parking_lot_id").charAt(0),
+                        resultSet.getInt("space_no"));
+            } else {
+                return new ParkingSpaceInfo(-1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ParkingSpaceInfo(-1);
+        } finally {
+            DatabaseUtil.releaseSource(connection, preparedStatement, resultSet);
+        }
+    }
+
+    public void setParkingCar(int id, String licensePlateNo) {
+        Connection connection = DatabaseUtil.connectToDB();
+        PreparedStatement preparedStatement = null;
+        try {
+            String updateCmd = "UPDATE parking_space_info SET license_plate_no = ? WHERE id = ?";
+            preparedStatement = connection.prepareStatement(updateCmd);
+            if ((null == licensePlateNo) || (licensePlateNo.isEmpty())) {
+                preparedStatement.setNull(1, Types.VARCHAR);
+            } else {
+                preparedStatement.setString(1, licensePlateNo);
+            }
+            preparedStatement.setInt(2, id);
+            preparedStatement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseUtil.releaseSource(connection, preparedStatement);
+        }
     }
 }

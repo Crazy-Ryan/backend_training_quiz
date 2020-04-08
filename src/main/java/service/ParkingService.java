@@ -1,6 +1,9 @@
 package service;
 
 import entity.ParkingLot;
+import entity.ParkingSpaceInfo;
+import entity.ParkingTicket;
+import exception.ParkingLotFullException;
 import repo.Repo;
 
 import java.util.ArrayList;
@@ -22,7 +25,17 @@ public class ParkingService {
         }
     }
 
-    public String park(String carNumber){
-        return "";
+    public ParkingTicket park(String carNumber) {
+        ParkingSpaceInfo availableParkingSpace = repo.findAvailableParkingSpace();
+        int availableParkingSpaceId = availableParkingSpace.getSpaceId();
+        if (-1 == availableParkingSpaceId) {
+            throw new ParkingLotFullException();
+        } else {
+            repo.setParkingCar(availableParkingSpaceId, carNumber);
+            return new ParkingTicket(
+                    availableParkingSpace.getParkingLotId(),
+                    availableParkingSpace.getSpaceNo(),
+                    carNumber);
+        }
     }
 }

@@ -1,3 +1,4 @@
+import exception.ParkingLotFullException;
 import service.ParkingService;
 
 import java.util.Scanner;
@@ -49,7 +50,12 @@ public class Application {
   }
 
   public static String park(String carNumber) {
-    return "";
+    try{
+      return parkingService.park(carNumber).toString();
+    }catch (ParkingLotFullException e){
+      System.out.println("非常抱歉，由于车位已满，暂时无法为您停车！");
+      throw new ParkingLotFullException();
+    }
   }
 
   public static String fetch(String ticket) {
