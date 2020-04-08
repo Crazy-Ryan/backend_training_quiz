@@ -92,4 +92,31 @@ public class Repo {
             DatabaseUtil.releaseSource(connection, preparedStatement);
         }
     }
+
+    public int fetchCar(ParkingTicket parkingTicket) {
+        Connection connection = DatabaseUtil.connectToDB();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            String queryCmd = "SELECT id FROM parking_space_info WHERE " +
+                    "parking_lot_id = ? AND " +
+                    "space_no = ? AND " +
+                    "license_plate_no = ?";
+            preparedStatement = connection.prepareStatement(queryCmd);
+            preparedStatement.setString(1, parkingTicket.getParkingLotId() + "");
+            preparedStatement.setInt(2, parkingTicket.getSpaceNo());
+            preparedStatement.setString(3, parkingTicket.getLicensePlateNo());
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            } else {
+                return -1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        } finally {
+            DatabaseUtil.releaseSource(connection, preparedStatement, resultSet);
+        }
+    }
 }

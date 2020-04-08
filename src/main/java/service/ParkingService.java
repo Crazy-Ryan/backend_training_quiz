@@ -3,6 +3,7 @@ package service;
 import entity.ParkingLot;
 import entity.ParkingSpaceInfo;
 import entity.ParkingTicket;
+import exception.InvalidTicketException;
 import exception.ParkingLotFullException;
 import repo.Repo;
 
@@ -36,6 +37,23 @@ public class ParkingService {
                     availableParkingSpace.getParkingLotId(),
                     availableParkingSpace.getSpaceNo(),
                     carNumber);
+        }
+    }
+
+    public String fetch(String ticket) {
+        String[] parkingTicketInfo = ticket.split(",");
+        ParkingTicket parkingTicketToValidate = new ParkingTicket(
+                parkingTicketInfo[0].charAt(0),
+                Integer.parseInt(parkingTicketInfo[1]),
+                parkingTicketInfo[2]);
+        int fetchedParkingSpaceId = repo.fetchCar(parkingTicketToValidate);
+        if (-1 != fetchedParkingSpaceId) {
+            String licensePlateNo = parkingTicketToValidate.getLicensePlateNo();
+            repo.setParkingCar(fetchedParkingSpaceId, null);
+            return licensePlateNo;
+        } else {
+            System.out.println("很抱歉，无法通过您提供的停车券为您找到相应的车辆，请您再次核对停车券是否有效！");
+            throw new InvalidTicketException();
         }
     }
 }

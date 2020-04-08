@@ -59,7 +59,7 @@ public class Application {
   }
 
   public static String fetch(String ticket) {
-    return "";
+    return parkingService.fetch(ticket);
   }
 
 }
