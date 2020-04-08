@@ -8,6 +8,7 @@ import java.util.List;
 
 public class ParkingService {
     Repo repo = new Repo();
+
     public void init(String initInfo) {
         String[] parkingLotsInfo = initInfo.split(",");
         List<ParkingLot> parkingLots = new ArrayList<>();
@@ -15,6 +16,13 @@ public class ParkingService {
             String[] parkingLotDetails = parkingLotInfo.split(":");
             parkingLots.add(new ParkingLot(parkingLotDetails[0].charAt(0), Integer.parseInt(parkingLotDetails[1])));
         }
-        repo.init(parkingLots);
+        repo.emptyDb();
+        for (ParkingLot parkingLot : parkingLots) {
+            repo.initDbData(parkingLot);
+        }
+    }
+
+    public String park(String carNumber){
+        return "";
     }
 }
