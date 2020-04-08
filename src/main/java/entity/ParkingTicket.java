@@ -1,37 +1,19 @@
 package entity;
 
-public class ParkingTicket {
-    private int spaceId;
-    private char parkingLotId;
-    private int spaceNo;
+public class ParkingTicket extends ParkingLocation {
     private String licensePlateNo;
 
-    public ParkingTicket() {
-    }
-
     public ParkingTicket(char parkingLotId, int spaceNo, String licensePlateNo) {
-        this.parkingLotId = parkingLotId;
-        this.spaceNo = spaceNo;
+        super(parkingLotId, spaceNo);
         this.licensePlateNo = licensePlateNo;
-    }
-
-    public char getParkingLotId() {
-        return parkingLotId;
-    }
-
-    public int getSpaceNo() {
-        return spaceNo;
     }
 
     public String getLicensePlateNo() {
         return licensePlateNo;
     }
 
-    public int getSpaceId() {
-        return spaceId;
-    }
-
-    public void setSpaceId(int spaceId) {
-        this.spaceId = spaceId;
+    @Override
+    public String toString() {
+        return parkingLotId + "," + spaceNo + "," + licensePlateNo;
     }
 }
