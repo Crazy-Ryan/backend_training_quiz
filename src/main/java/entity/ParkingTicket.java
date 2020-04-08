@@ -5,6 +5,9 @@ public class ParkingTicket {
     private int spaceNo;
     private String licensePlateNo;
 
+    public ParkingTicket() {
+    }
+
     public ParkingTicket(char parkingLotId, int spaceNo, String licensePlateNo) {
         this.parkingLotId = parkingLotId;
         this.spaceNo = spaceNo;
