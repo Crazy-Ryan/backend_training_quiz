@@ -1,6 +1,7 @@
 package entity;
 
 public class ParkingTicket {
+    private int spaceId;
     private char parkingLotId;
     private int spaceNo;
     private String licensePlateNo;
@@ -24,5 +25,13 @@ public class ParkingTicket {
 
     public String getLicensePlateNo() {
         return licensePlateNo;
+    }
+
+    public int getSpaceId() {
+        return spaceId;
+    }
+
+    public void setSpaceId(int spaceId) {
+        this.spaceId = spaceId;
     }
 }
