@@ -1,6 +1,9 @@
+import service.ParkingService;
+
 import java.util.Scanner;
 
 public class Application {
+  private static ParkingService parkingService = new ParkingService();
 
   public static void main(String[] args) {
     operateParking();
@@ -42,7 +45,7 @@ public class Application {
   }
 
   public static void init(String initInfo) {
-
+    parkingService.init(initInfo);
   }
 
   public static String park(String carNumber) {
