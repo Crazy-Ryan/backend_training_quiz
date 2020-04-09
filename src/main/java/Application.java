@@ -50,7 +50,7 @@ public class Application {
 
     public static String park(String carNumber) {
         try {
-            return parkingService.park(carNumber).toString();
+            return parkingService.park(carNumber);
         } catch (ParkingLotFullException e) {
             System.out.println("非常抱歉，由于车位已满，暂时无法为您停车！");
             throw new ParkingLotFullException();

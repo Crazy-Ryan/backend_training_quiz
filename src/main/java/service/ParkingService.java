@@ -26,7 +26,7 @@ public class ParkingService {
         }
     }
 
-    public ParkingTicket park(String carNumber) {
+    public String park(String carNumber) {
         ParkingSpaceInfo availableParkingSpace = repo.findAvailableParkingSpace();
         int availableParkingSpaceId = availableParkingSpace.getSpaceId();
         if (-1 == availableParkingSpaceId) {
@@ -36,7 +36,7 @@ public class ParkingService {
             return new ParkingTicket(
                     availableParkingSpace.getParkingLotId(),
                     availableParkingSpace.getSpaceNo(),
-                    carNumber);
+                    carNumber).toString();
         }
     }
 
