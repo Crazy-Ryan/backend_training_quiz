@@ -13,6 +13,8 @@ import java.util.Random;
 
 public class ParkingService {
     Repo repo = new Repo();
+    private static int stuffRotate = 0;
+
 
     public void init(String initInfo) {
         String[] parkingLotsInfo = initInfo.split(",");
@@ -28,7 +30,14 @@ public class ParkingService {
     }
 
     public String park(String carNumber) {
-        ParkingSpaceInfo availableParkingSpace = repo.findAvailableParkingSpaceIntelligent();
+        ParkingSpaceInfo availableParkingSpace = null;
+        stuffRotate++;
+        if (0 == stuffRotate % 2) {
+            availableParkingSpace = repo.findAvailableParkingSpaceIntelligent();
+        } else {
+            availableParkingSpace = repo.findAvailableParkingSpace();
+        }
+
         int availableParkingSpaceId = availableParkingSpace.getSpaceId();
         if (-1 == availableParkingSpaceId) {
             throw new ParkingLotFullException();
@@ -58,7 +67,7 @@ public class ParkingService {
         }
     }
 
-    public int[] calTimePrice(){
+    public int[] calTimePrice() {
 
         Random random = new Random();
         double parkTime = random.nextDouble() * 23 + 1;
