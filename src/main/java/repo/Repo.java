@@ -73,6 +73,41 @@ public class Repo {
         }
     }
 
+    public ParkingSpaceInfo findAvailableParkingSpaceIntelligent() {
+        Connection connection = DatabaseUtil.connectToDB();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            String setStartIdCmd = "SELECT id, parking_lot_id, space_no\n" +
+                    "FROM parking_space_info\n" +
+                    "WHERE isnull(license_plate_no)\n" +
+                    "  AND parking_lot_id = (SELECT parking_lot_id\n" +
+                    "                         FROM (SELECT id, parking_lot_id\n" +
+                    "                               FROM parking_space_info\n" +
+                    "                               WHERE isnull(license_plate_no)) AS emptySpace\n" +
+                    "                         GROUP BY parking_lot_id\n" +
+                    "                         ORDER BY count(id) DESC\n" +
+                    "                         LIMIT 1)\n" +
+                    "ORDER BY parking_lot_id, space_no\n" +
+                    "LIMIT 1";
+            preparedStatement = connection.prepareStatement(setStartIdCmd);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return new ParkingSpaceInfo(
+                        resultSet.getInt("id"),
+                        resultSet.getString("parking_lot_id").charAt(0),
+                        resultSet.getInt("space_no"));
+            } else {
+                return new ParkingSpaceInfo(-1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ParkingSpaceInfo(-1);
+        } finally {
+            DatabaseUtil.releaseSource(connection, preparedStatement, resultSet);
+        }
+    }
+
     public void setParkingCar(int id, String licensePlateNo) {
         Connection connection = DatabaseUtil.connectToDB();
         PreparedStatement preparedStatement = null;

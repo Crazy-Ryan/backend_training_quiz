@@ -40,7 +40,9 @@ public class Application {
             System.out.println("请输入停车券信息\n格式为\"停车场编号1,车位编号,车牌号\" 如 \"A,1,8\"：");
             String ticket = scanner.next();
             String car = fetch(ticket);
-            System.out.format("已为您取到车牌号为%s的车辆，很高兴为您服务，祝您生活愉快!\n", car);
+            System.out.format("已为您取到车牌号为%s的车辆", car);
+            int[] timeRes = parkingService.calTimePrice();
+            System.out.format("您的停车时间为%s小时，停车费用为%s元，很高兴为您服务，祝您生活愉快!\n", timeRes[0], timeRes[1]);
         }
     }
 

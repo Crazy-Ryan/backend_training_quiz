@@ -9,6 +9,7 @@ import repo.Repo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ParkingService {
     Repo repo = new Repo();
@@ -27,7 +28,7 @@ public class ParkingService {
     }
 
     public String park(String carNumber) {
-        ParkingSpaceInfo availableParkingSpace = repo.findAvailableParkingSpace();
+        ParkingSpaceInfo availableParkingSpace = repo.findAvailableParkingSpaceIntelligent();
         int availableParkingSpaceId = availableParkingSpace.getSpaceId();
         if (-1 == availableParkingSpaceId) {
             throw new ParkingLotFullException();
@@ -50,9 +51,39 @@ public class ParkingService {
         if (-1 != fetchedParkingSpaceId) {
             String licensePlateNo = parkingTicketToValidate.getLicensePlateNo();
             repo.setParkingCar(fetchedParkingSpaceId, null);
+
             return licensePlateNo;
         } else {
             throw new InvalidTicketException();
         }
+    }
+
+    public int[] calTimePrice(){
+
+        Random random = new Random();
+        double parkTime = random.nextDouble() * 23 + 1;
+        int timeReport = (int) Math.ceil(parkTime);
+        int price = calPrice(parkTime);
+        int[] intArr = new int[2];
+        intArr[0] = timeReport;
+        intArr[1] = price;
+        return intArr;
+    }
+
+    public int calPrice(double time) {
+        if (time < 2) {
+            return 0;
+        } else if (time < 5) {
+            return (int) (Math.ceil(time - 2) * 5);
+        } else {
+            return (int) (Math.ceil(time - 5) * 10) + 15;
+        }
+    }
+
+    public static void main(String[] args) {
+//        while(true) {
+//            Scanner scanner = new Scanner();
+        System.out.println(new ParkingService().calPrice(5.5));
+//        }
     }
 }
