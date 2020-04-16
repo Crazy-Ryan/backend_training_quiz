@@ -30,7 +30,7 @@ public class ParkingService {
     }
 
     public String park(String carNumber) {
-        ParkingSpaceInfo availableParkingSpace = null;
+        ParkingSpaceInfo availableParkingSpace;
         stuffRotate++;
         if (0 == stuffRotate % 2) {
             availableParkingSpace = repo.findAvailableParkingSpaceIntelligent();
@@ -68,7 +68,6 @@ public class ParkingService {
     }
 
     public int[] calTimePrice() {
-
         Random random = new Random();
         double parkTime = random.nextDouble() * 23 + 1;
         int timeReport = (int) Math.ceil(parkTime);
@@ -89,10 +88,4 @@ public class ParkingService {
         }
     }
 
-    public static void main(String[] args) {
-//        while(true) {
-//            Scanner scanner = new Scanner();
-        System.out.println(new ParkingService().calPrice(5.5));
-//        }
-    }
 }
